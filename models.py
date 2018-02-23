@@ -196,7 +196,7 @@ class PointerAttentionDecoder(Module):
 		e_t = self.v(F.tanh(enc_proj + dec_proj + cov_proj).view(batch_size*max_enc_len, -1))
 		attn_scores = e_t.view(batch_size, max_enc_len)
 		del e_t
-		attn_scores.masked_fill_(enc_mask, -float('inf'))
+		attn_scores.masked_fill_(enc_mask, -float(sys.maxsize))
 		attn_scores = F.softmax(attn_scores)
 
 		context = attn_scores.unsqueeze(1).bmm(enc_states)		
