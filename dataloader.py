@@ -1,4 +1,4 @@
-import cPickle as pickle
+import pickle
 import os, random,pdb, torch
 from itertools import groupby
 from tqdm import tqdm
@@ -23,14 +23,14 @@ class dataloader():
 		self.train_path = train_path
 		self.test_path = test_path
 		if not self.test_mode:
-			print 'Loading training data from disk...will take a minute...'
+			print('Loading training data from disk...will take a minute...')
 			with open(self.train_path,'rb') as f:
 				self.train_data = pickle.load(f)				
 			self.trainSamples = len(self.train_data)
 		else:
-			print 'Initializing Dataloader in test mode with only eval-dataset...'
+			print('Initializing Dataloader in test mode with only eval-dataset...')
 		#Load eval set
-		print 'Loading eval data from disk...'
+		print('Loading eval data from disk...')
 		with open(self.test_path,'rb') as f:
 			self.test_data = pickle.load(f)				   
 		self.testSamples = len(self.test_data)
@@ -146,14 +146,14 @@ class dataloader():
 			num_samples = self.batchSize
 
 		if self.epoch > self.maxEpochs:
-			print 'Maximum Epoch Limit reached'
+			print('Maximum Epoch Limit reached')
 			self.stopFlag = True
 			return None
 		
 		if self.iterInd + num_samples > self.trainSamples:
-			data = [self.train_data[i] for i in xrange(self.iterInd, self.trainSamples)]
+			data = [self.train_data[i] for i in range(self.iterInd, self.trainSamples)]
 		else:
-			data = [self.train_data[i] for i in xrange(self.iterInd, self.iterInd + num_samples)]
+			data = [self.train_data[i] for i in range(self.iterInd, self.iterInd + num_samples)]
 		
 		batchData = self.preproc(data)
 		

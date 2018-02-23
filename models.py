@@ -1,3 +1,4 @@
+import sys
 import torch
 from torch.autograd import Variable
 from torch.nn import LSTM, GRU, Linear, LSTMCell, Module
@@ -132,7 +133,7 @@ class PointerAttentionDecoder(Module):
 			# mask to -INF before applying softmax
 			attn_scores = e_t.view(batch_size, max_enc_len)
 			del e_t
-			attn_scores.masked_fill_(enc_mask, -float('inf'))
+			attn_scores.masked_fill_(enc_mask, -float(sys.maxsize))
 			attn_scores = F.softmax(attn_scores)
 			
 			context = attn_scores.unsqueeze(1).bmm(enc_states).squeeze(1)		
@@ -270,8 +271,8 @@ class PointerAttentionDecoder(Module):
 			# curr_beam_size <= self.beam_size due to pruning of beams that have terminated
 			# adjust enc_states and init_state accordingly
 			curr_beam_size = _input.size(0)			
-		 	beam_enc_states = enc_states.expand(curr_beam_size, enc_states.size(1), enc_states.size(2)).contiguous().detach()
-		 	beam_article_inds = article_inds.expand(curr_beam_size, article_inds.size(1)).detach()		 	
+			beam_enc_states = enc_states.expand(curr_beam_size, enc_states.size(1), enc_states.size(2)).contiguous().detach()
+			beam_article_inds = article_inds.expand(curr_beam_size, article_inds.size(1)).detach()		 	
 
 			vocab_probs, next_h, next_c = self.decode_step(beam_enc_states, init_state, _input, enc_mask, beam_article_inds)
 
